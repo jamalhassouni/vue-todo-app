@@ -10,11 +10,16 @@
         <label for="toggle-all">Mark all as complete</label>
 
         <ul class="todo-list">
-          <li class="todo" v-for="todo in todos" :key="todo.title">
+          <li
+            class="todo"
+            :class="{completed:todo.completed}"
+            v-for="todo in todos"
+            :key="todo.title"
+          >
             <div class="view">
               <input class="toggle" type="checkbox" v-model="todo.completed">
               <label>{{todo.title}}</label>
-              <button class="destroy"></button>
+              <button @click="deleteTodo(todo)" class="destroy"></button>
             </div>
             <input class="edit" type="text">
           </li>
@@ -51,9 +56,15 @@ export default {
     return {
       todos: [
         { title: "test1", completed: true },
-        { title: "test2", completed: false }
+        { title: "test2", completed: false },
+        { title: "test3", completed: false }
       ]
     };
+  },
+  methods: {
+    deleteTodo: function(todo) {
+      this.todos.splice(this.todos.indexOf(todo), 1);
+    }
   }
 };
 </script>
