@@ -10,10 +10,10 @@
         <label for="toggle-all">Mark all as complete</label>
 
         <ul class="todo-list">
-          <li class="todo">
+          <li class="todo" v-for="todo in todos" :key="todo.title">
             <div class="view">
-              <input class="toggle" type="checkbox">
-              <label>title</label>
+              <input class="toggle" type="checkbox" v-model="todo.completed">
+              <label>{{todo.title}}</label>
               <button class="destroy"></button>
             </div>
             <input class="edit" type="text">
@@ -48,7 +48,12 @@
 export default {
   name: "app",
   data: () => {
-    return {};
+    return {
+      todos: [
+        { title: "test1", completed: true },
+        { title: "test2", completed: false }
+      ]
+    };
   }
 };
 </script>
