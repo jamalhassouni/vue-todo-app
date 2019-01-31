@@ -19,7 +19,7 @@
           <li
             class="todo"
             :class="{completed:todo.completed}"
-            v-for="todo in todos"
+            v-for="todo in filteredTodos"
             :key="todo.title"
           >
             <div class="view">
@@ -37,13 +37,21 @@
         </span>
         <ul class="filters">
           <li>
-            <a href="#/all" class="selected">All</a>
+            <a href="#" @click.prevent="visability='all'" :class="{selected:visability=='all'}">All</a>
           </li>
           <li>
-            <a href="#/active">Active</a>
+            <a
+              href="#"
+              @click.prevent="visability='active'"
+              :class="{selected:visability=='active'}"
+            >Active</a>
           </li>
           <li>
-            <a href="#/completed">Completed</a>
+            <a
+              href="#"
+              @click.prevent="visability='completed'"
+              :class="{selected:visability=='completed'}"
+            >Completed</a>
           </li>
         </ul>
         <button class="clear-completed">Clear completed</button>
@@ -56,6 +64,17 @@
 </template>
 
 <script>
+var filters = {
+  all: function(todos) {
+    return todos;
+  },
+  completed: function(todos) {
+    return todos.filter(todo => todo.completed);
+  },
+  active: function(todos) {
+    return todos.filter(todo => !todo.completed);
+  }
+};
 export default {
   name: "app",
   data: () => {
@@ -65,8 +84,14 @@ export default {
         { title: "test2", completed: false },
         { title: "test3", completed: false }
       ],
-      newTodo: ""
+      newTodo: "",
+      visability: "all"
     };
+  },
+  computed: {
+    filteredTodos: function() {
+      return filters[this.visability](this.todos);
+    }
   },
   methods: {
     deleteTodo: function(todo) {
