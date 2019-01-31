@@ -3,7 +3,13 @@
     <section class="todoapp">
       <header class="header">
         <h1>todos</h1>
-        <input class="new-todo" autocomplete="off" placeholder="What needs to be done?">
+        <input
+          v-model="newTodo"
+          @keyup.enter="addTodo"
+          class="new-todo"
+          autocomplete="off"
+          placeholder="What needs to be done?"
+        >
       </header>
       <section class="main">
         <input class="toggle-all" id="toggle-all" type="checkbox">
@@ -58,12 +64,21 @@ export default {
         { title: "test1", completed: true },
         { title: "test2", completed: false },
         { title: "test3", completed: false }
-      ]
+      ],
+      newTodo: ""
     };
   },
   methods: {
     deleteTodo: function(todo) {
       this.todos.splice(this.todos.indexOf(todo), 1);
+    },
+    addTodo: function() {
+      if (this.newTodo == "") return;
+      this.todos.push({
+        title: this.newTodo,
+        completed: false
+      });
+      this.newTodo = "";
     }
   }
 };
