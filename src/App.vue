@@ -33,7 +33,8 @@
       </section>
       <footer class="footer">
         <span class="todo-count">
-          <strong>1</strong> item left
+          <strong>{{remaningTodos}}</strong>
+          {{remaningText}} left
         </span>
         <ul class="filters">
           <li>
@@ -54,7 +55,7 @@
             >Completed</a>
           </li>
         </ul>
-        <button class="clear-completed">Clear completed</button>
+        <button class="clear-completed" @click="removeCompleted">Clear completed</button>
       </footer>
     </section>
     <footer class="info">
@@ -91,6 +92,13 @@ export default {
   computed: {
     filteredTodos: function() {
       return filters[this.visability](this.todos);
+    },
+    remaningTodos: function() {
+      return filters.active(this.todos).length;
+    },
+    remaningText: function() {
+      if (filters.active(this.todos).length > 1) return "items";
+      return "item";
     }
   },
   methods: {
@@ -104,6 +112,9 @@ export default {
         completed: false
       });
       this.newTodo = "";
+    },
+    removeCompleted: function() {
+      this.todos = filters.active(this.todos);
     }
   }
 };
