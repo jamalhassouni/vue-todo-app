@@ -12,7 +12,7 @@
         >
       </header>
       <section class="main">
-        <input class="toggle-all" id="toggle-all" type="checkbox">
+        <input class="toggle-all" id="toggle-all" type="checkbox" v-model="allDone">
         <label for="toggle-all">Mark all as complete</label>
 
         <ul class="todo-list">
@@ -99,6 +99,14 @@ export default {
     remaningText: function() {
       if (filters.active(this.todos).length > 1) return "items";
       return "item";
+    },
+    allDone: {
+      get: function() {
+        return this.remaningTodos === 0;
+      },
+      set: function(val) {
+        this.todos.forEach(todo => (todo.completed = val));
+      }
     }
   },
   methods: {
