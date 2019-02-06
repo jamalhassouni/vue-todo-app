@@ -88,15 +88,21 @@ var filters = {
     return todos.filter(todo => !todo.completed);
   }
 };
+
+const todoStorage = {
+  fetch: function() {
+    var todos = localStorage.getItem("todos");
+    return JSON.parse(todos || "[]");
+  },
+  save: function(todos) {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }
+};
 export default {
   name: "app",
   data: () => {
     return {
-      todos: [
-        { title: "test1", completed: true },
-        { title: "test2", completed: false },
-        { title: "test3", completed: false }
-      ],
+      todos: todoStorage.fetch(),
       newTodo: "",
       visability: "all",
       editingTodo: null,
@@ -158,6 +164,14 @@ export default {
     cancelEditing(todo) {
       todo.title = this.oldEditingTodoTitle;
       this.editingTodo = null;
+    }
+  },
+  watch: {
+    todos: {
+      handler: function(todos) {
+        todoStorage.save(todos);
+      },
+      deep: true
     }
   }
 };
