@@ -31,9 +31,9 @@
               class="edit"
               type="text"
               v-model="todo.title"
-              autofocus
-              @keyup.enter="doneEditing()"
-              @keyup.esc="cancelEditing()"
+              v-focus
+              @keyup.enter="doneEditing(todo)"
+              @keyup.esc="cancelEditing(todo)"
             >
           </li>
         </ul>
@@ -72,6 +72,11 @@
 </template>
 
 <script>
+const focus = {
+  inserted(el) {
+    el.focus();
+  }
+};
 var filters = {
   all: function(todos) {
     return todos;
@@ -98,6 +103,13 @@ export default {
       oldEditingTodoTitle: null
     };
   },
+  // a custom directive to wait for the DOM to be updated
+  // before focusing on the input field.
+  // http://vuejs.org/guide/custom-directive.html
+  directives: {
+    focus
+  },
+
   computed: {
     filteredTodos: function() {
       return filters[this.visability](this.todos);
@@ -137,13 +149,14 @@ export default {
       this.editingTodo = todo;
       this.oldEditingTodoTitle = todo.title;
     },
-    doneEditing() {
-      if (this.editingTodo.title == "") this.deleteTodo(this.editingTodo);
+    doneEditing(todo) {
+      if (this.editingTodo.title.trim() == "")
+        this.deleteTodo(this.editingTodo);
 
       this.editingTodo = null;
     },
-    cancelEditing() {
-      this.editingTodo.title = this.oldEditingTodoTitle;
+    cancelEditing(todo) {
+      todo.title = this.oldEditingTodoTitle;
       this.editingTodo = null;
     }
   }
